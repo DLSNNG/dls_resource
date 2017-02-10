@@ -1,0 +1,28 @@
+<?php
+  
+  class AnotherTest extends DrupalUnitTestCase {
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getInfo() {
+      return array(
+        'name' => 'Another test',
+        'description' => 'Another test case to see if this works.',
+        'group' => 'Examples',
+      );
+    }
+
+    public function setUp() {
+      drupal_load('module', 'dls_resource');
+      parent::setUp();
+    }
+
+    public function testAgain() {
+      $result = 1;
+      // Note that test assertion messages should never be translated, so
+      // this string is not wrapped in t().
+      $message = 'One should equal 1.';
+      $this->assertTrue($result = 1, $message);
+    }
+  }

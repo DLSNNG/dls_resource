@@ -1,0 +1,18 @@
+name = DLS Resource
+description = Interface to standardize various sources of data
+core = 7.x
+package = "DLS"
+version = VERSION
+; Required by simpletest
+testing_api = 2.x
+
+;configure = admin/config/dls/components
+
+; Files
+files[] = dls_resource.module
+files[] = tests/dls_resource.test
+
+; Dependencies
+dependencies[] = dls_rest_routes
+
+

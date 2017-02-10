@@ -1,0 +1,87 @@
+<?php
+
+  class MockResourceTestCase extends DrupalUnitTestCase {
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getInfo() {
+      return array(
+        'name' => 'Mock Resource Test Case',
+        'description' => 'Test various methods of the MockResource Class.',
+        'group' => 'Resource',
+      );
+    }
+
+    public function setUp() {
+      module_load_include('inc', 'dls_resource', '/includes/library/dls_resource.mock_resource');
+      parent::setUp();
+    }
+
+    public function testMockResource() {
+      $message = 'It should be able to set its model property with the looksLike() method';
+      $resource = new MockResource();
+      $json = '
+        {
+          "firstname": "Nathan",
+          "lastname": "Ng"
+        }
+      ';
+      $resource->looksLike($json);
+      $this->assertEqual($resource->model, $json, $message, 'looksLike()');
+      
+      
+      $message = 'It should return an object resembling the model when get(id) is called.';
+      $object = $resource->get(1);
+      $expected = json_decode($json);
+      $expected->ID = 1;
+      
+      $this->assertEqual($object, $expected, $message, 'get(id)');
+      
+      
+      $message = 'It should have the same properties and values assigned to the model.';
+      $this->assertEqual($object->firstname, 'Nathan', $message, 'get(id');
+      
+      
+      $message = 'It should produce 100 copies of the model when getAll() is called.';
+      $object = $resource->getAll();
+      $expected->ID = 100;
+      $this->assertEqual(count($object), 100, $message, 'getAll()');
+      $this->assertEqual($object[99], $expected, $message, 'getAll()');
+      
+      
+      $message = 'It should produce 25 copies of the model when getWhere() is called';
+      $object = $resource->getWhere(array());
+      $this->assertEqual(count($object), 25, $message, 'getWhere()');
+      
+      
+      $message = 'The IDs of objects returned by getWhere() should be incremented by 2.';
+      $expected->ID = 1 + 24*2;
+      $this->assertEqual($object[24], $expected, $message, 'getWhere()');
+      
+      
+      $message = 'It should return a copy of the model with updated properties when
+                  update() is called.';
+      $object = $resource->update(5, array('firstname' => 'Nate', 'gender' => 'M'));
+      $expected->ID = 5;
+      $expected->firstname = 'Nate';
+      $expected->gender = 'M';
+      $this->assertEqual($object, $expected, $message, 'update()');
+      
+      
+      $message = 'It should return an object resembling the model when delete(id) is called.';
+      $object = $resource->get(1);
+      $expected = json_decode($json);
+      $expected->ID = 1;
+      $this->assertEqual($object, $expected, $message, 'delete()');
+      
+      $message = 'It should return a copy of the model with the designated properties when
+                  create() is called.';
+      $object = $resource->create(array('firstname' => 'Nate', 'gender' => 'M'));
+      $expected->ID = 1;
+      $expected->firstname = 'Nate';
+      $expected->gender = 'M';
+      $this->assertEqual($object, $expected, $message, 'update()');
+    }
+    
+  }

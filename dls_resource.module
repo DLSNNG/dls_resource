@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file DLS Data Source module.
+ */
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+// Hooks and preprocess functions
+//---------------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Implementation of hook_permission().
+ * Set permissions for module
+ */
+function dls_resource_permission() {
+  return array(
+      'view resource' => array(
+          'title' => 'View DLS Resource Pages',
+          'description' => t('Allow user to view DLS Resource Test Pages.')
+      ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function dls_resource_menu() {
+  $items = array();
+  $path = drupal_get_path('module', 'dls_resource') . '/includes/views';
+
+  $items['resource'] = array(
+      'title' => 'DLS Resource',
+      'page callback' => 'view_dls_resource_home',
+      'access arguments' => array('view resource'),
+      'file path' => $path,
+      'file' => 'dls_resource.home.inc',
+  );
+  
+  return $items;
+}
